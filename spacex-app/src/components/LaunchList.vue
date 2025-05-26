@@ -3,8 +3,8 @@
     <label class="block mb-2 text-sm font-medium">Filtrer :</label>
     <select v-model="filter" class="bg-gray-700 text-white p-2 rounded mb-4">
       <option value="all">Tous les lancements</option>
-      <option value="success">Succès</option>
-      <option value="fail">Échecs</option>
+      <option value="success">Lancements réussis</option>
+      <option value="fail">Lancements échoués</option>
     </select>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

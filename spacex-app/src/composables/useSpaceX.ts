@@ -13,8 +13,20 @@ export async function fetchNextLaunch() {
     .filter((l: any) => l.upcoming === true && new Date(l.date_utc).getTime() > now)
     .sort((a: any, b: any) => new Date(a.date_utc).getTime() - new Date(b.date_utc).getTime())
 
-  return filtered[0] || null
+  if (filtered.length === 0) {
+    console.warn('❗ Aucun lancement futur trouvé dans l\'API SpaceX. Données fictives utilisées.')
+    return {
+      name: "Mission de démonstration",
+      date_utc: new Date(Date.now() + 86400000).toISOString(),
+      date_unix: Math.floor((Date.now() + 86400000) / 1000),
+      fake: true
+    }
+  }
+
+  return filtered[0]
 }
+
+
 
 // Récupère les lancements selon un filtre : "all" ou "success"
 export async function fetchLaunches(filter: string) {

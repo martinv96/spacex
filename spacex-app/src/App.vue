@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-900 text-white p-4 space-y-8">
-    <h1 class="text-4xl font-bold text-center">🚀 SpaceX Launch Viewer</h1>
+    <h1 class="text-4xl font-bold text-center">🚀 Lancements SpaceX </h1>
     <NextLaunch />
     <LaunchList />
   </div>

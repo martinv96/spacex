@@ -6,27 +6,41 @@
       <p class="text-sm text-gray-400">{{ formattedDate }}</p>
       <p class="text-lg mt-2">⏳ {{ formattedCountdown }}</p>
     </div>
-    <div v-else>Chargement...</div>
+    <div v-else>
+      <p class="text-xl text-gray-300">Aucun lancement à venir.</p>
+      <p class="text-sm text-gray-400">⏳ 0j 0h 0m 0s</p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { fetchNextLaunch } from '../composables/useSpaceX'
 
 const launch = ref<any | null>(null)
 const countdown = ref<number>(0)
+let intervalId: number | null = null
 
 onMounted(async () => {
   launch.value = await fetchNextLaunch()
   updateCountdown()
-  setInterval(updateCountdown, 1000)
+
+  intervalId = setInterval(() => {
+    updateCountdown()
+  }, 1000)
+})
+
+onUnmounted(() => {
+  if (intervalId !== null) clearInterval(intervalId)
 })
 
 function updateCountdown() {
-  if (!launch.value?.date_unix) return
-  const now = Math.floor(Date.now() / 1000)
-  countdown.value = Math.max(launch.value.date_unix - now, 0)
+  if (launch.value?.date_unix) {
+    const now = Math.floor(Date.now() / 1000)
+    countdown.value = Math.max(launch.value.date_unix - now, 0)
+  } else {
+    countdown.value = 0
+  }
 }
 
 const formattedDate = computed(() =>
@@ -41,5 +55,7 @@ function formatCountdown(seconds: number): string {
   return `${days}j ${hours}h ${minutes}m ${secs}s`
 }
 
-const formattedCountdown = computed(() => formatCountdown(countdown.value))
+const formattedCountdown = computed(() =>
+  formatCountdown(countdown.value)
+)
 </script>
